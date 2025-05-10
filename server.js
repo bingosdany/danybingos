@@ -4,14 +4,14 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-require("dotenv").config(); // Importar variables de entorno
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public"))); // Servir archivos del frontend
+app.use(express.static(path.join(__dirname, "public")));
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// Obtener todos los usuarios
 app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find();
@@ -37,7 +36,6 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-// Asignar cartones manualmente
 app.post("/api/assign", async (req, res) => {
   const { id, count } = req.body;
 
@@ -47,26 +45,22 @@ app.post("/api/assign", async (req, res) => {
 
     const cartones = [];
     for (let i = 0; i < count; i++) {
-      cartones.push(`Cartón #${i + 1}: ${Math.random().toString(36).substr(2, 10).toUpperCase()}`);
+      cartones.push(Cartón #${i + 1}: ${Math.random().toString(36).substr(2, 10).toUpperCase()});
     }
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "tartaraexpressalvajadas@gmail.com",
-        pass: "Mercedes2585@",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     await transporter.sendMail({
-      from: "Bingos Dany <tartaraexpressalvajadas@gmail.com>",
+      from: Bingos Dany <${process.env.EMAIL_USER}>,
       to: user.email,
       subject: "Tus cartones de bingo",
-      text: `Hola ${user.name}, aquí tienes tus ${count} cartones:
-
-${cartones.join("\n")}
-
-¡Buena suerte!`,
+      text: Hola ${user.name}, aquí tienes tus ${count} cartones:\n\n${cartones.join("\n")}\n\n¡Buena suerte!,
     });
 
     user.assigned = true;
@@ -79,5 +73,5 @@ ${cartones.join("\n")}
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(Servidor corriendo en el puerto ${PORT});
 });
