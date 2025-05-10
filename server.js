@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
@@ -45,7 +46,7 @@ app.post("/api/assign", async (req, res) => {
 
     const cartones = [];
     for (let i = 0; i < count; i++) {
-      cartones.push(Cartón #${i + 1}: ${Math.random().toString(36).substr(2, 10).toUpperCase()});
+      cartones.push(`Cartón #${i + 1}: ${Math.random().toString(36).substr(2, 10).toUpperCase()}`);
     }
 
     const transporter = nodemailer.createTransport({
@@ -57,10 +58,15 @@ app.post("/api/assign", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: Bingos Dany <${process.env.EMAIL_USER}>,
+      from: `Bingos Dany <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject: "Tus cartones de bingo",
-      text: Hola ${user.name}, aquí tienes tus ${count} cartones:\n\n${cartones.join("\n")}\n\n¡Buena suerte!,
+      text: `Hola ${user.name}, aquí tienes tus ${count} cartones:
+
+${cartones.join("
+")}
+
+¡Buena suerte!`,
     });
 
     user.assigned = true;
@@ -73,5 +79,5 @@ app.post("/api/assign", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(Servidor corriendo en el puerto ${PORT});
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
