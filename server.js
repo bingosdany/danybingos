@@ -13,9 +13,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-mongoose.connect(process.env.MONGODB_URI, {
+// ✅ Conexión corregida a Mongo usando MONGO_URL (como está en tu .env)
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+})
+.then(() => console.log("✅ Conectado a MongoDB"))
+.catch((err) => {
+  console.error("❌ Error al conectar a MongoDB:", err.message);
+  process.exit(1);
 });
 
 const userSchema = new mongoose.Schema({
@@ -68,6 +74,7 @@ app.post("/api/assign", async (req, res) => {
 
     res.send("Cartones enviados");
   } catch (err) {
+    console.error("❌ Error al asignar cartones:", err.message);
     res.status(500).send("Error al asignar cartones");
   }
 });
