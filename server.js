@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
@@ -61,12 +60,7 @@ app.post("/api/assign", async (req, res) => {
       from: `Bingos Dany <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject: "Tus cartones de bingo",
-      text: `Hola ${user.name}, aquí tienes tus ${count} cartones:
-
-${cartones.join("
-")}
-
-¡Buena suerte!`,
+      text: `Hola ${user.name}, aquí tienes tus ${count} cartones:\n\n${cartones.join("\n")}\n\n¡Buena suerte!`,
     });
 
     user.assigned = true;
